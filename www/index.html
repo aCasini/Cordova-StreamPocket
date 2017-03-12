@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+     KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+-->
+<html>
+    <head>
+        <meta name="format-detection" content="telephone=no">
+        <meta name="msapplication-tap-highlight" content="no">
+        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
+        <link rel="stylesheet" type="text/css" href="css/index.css">
+        <link rel="stylesheet" type="text/css" href="css/mui.min.css">
+        <link rel="stylesheet" type="text/css" href="css/mui-rtl.min.css">
+		    <link rel="stylesheet" type="text/css" href="js/jquery-1.5.0.mobile.min.css">
+    		<style>
+      		/* For avoiding title truncation in wp8 */
+      		.ui-header .ui-title {
+      				overflow: visible !important;
+      		}
+      		/* For fixing the absolute position issue for the default cordova gen page*/
+      		#cjp-accordion1 .app {
+      				left: 5px !important;
+      				margin: 5px !important;
+      				position: relative !important;
+      		}
+    		</style>
+        <!-- jQuery -->
+        <script type="text/javascript" src="http://code.jquery.com/jquery-1.4.3.min.js"></script>
+
+        <title>Stream Pockek</title>
+
+        <script language="javascript">
+
+        /*
+        * Validation Form - Start the Search
+        */
+        function validateFormOnSubmit(theForm) {
+            //Get search String value from input text
+            var searchStringValue = $('#serchStringID').val();
+
+            if (searchStringValue != null
+                  && searchStringValue != "") {
+
+              // Show spinner dialog
+              window.plugins.spinnerDialog.show();
+              //Storage the value of serach
+              localStorage.setItem('searchStringValue', searchStringValue);
+
+              getStreamingJSON(searchStringValue);
+
+            } else {
+              alert("Please enter a value for Film or TV Serie!\n");
+            }
+            return false;
+        }
+
+        function playVideo(streamURL){
+          //alert("Start the player video -- " + streamURL);
+          console.log("Start the video Streaming URL - "+ streamURL);
+          var videoUrl = streamURL;
+          // Just play a video
+          //window.plugins.streamingMedia.playVideo(videoUrl);
+          // Play a video with callbacks
+          var options = {
+            successCallback: function() {
+              console.log("Video was closed without error.");
+            },
+            errorCallback: function(errMsg) {
+              console.log("Error! " + errMsg);
+            },
+            orientation: 'landscape'
+          };
+          window.plugins.streamingMedia.playVideo(videoUrl, options);
+        }
+
+
+        /*
+        * call the web Service
+        */
+        function getStreamingJSON(value){
+          $.ajax( {
+            url:'http://ancient-tor-87034.herokuapp.com/films?filmName='+value,
+            type: "GET",
+            crossDomain: true,
+            //data: JSON.stringify(somejson),
+            dataType: "json",
+            success: function (response) {
+                var sizeStream = response.length;
+
+                if(sizeStream == 0){
+                  alert("No Stream foud, please try again");
+                }else{
+                  for(i=0; i<sizeStream; i++){
+                    var resultStreamDIV = $("<div>").attr("id", response[i].filmName);
+                    resultStreamDIV.html([
+                      "<div class='card' style='align-content: center;'>",
+                      //  "<video loop autoplay controls='true' width='100%' height='100%' poster='"+ response[i].imageUrl +"' controls webkit-playsinline>",
+                      //    "<source src='"+ response[i].streamingUrl +"' type='video/mp4'>",
+                      //  "</video>",
+
+                        //'<input type="button" onClick="playVideo(\'' + response[i].streamingUrl + '\')" />',
+                        '<a onClick="playVideo(\'' + response[i].streamingUrl + '\')" >',
+                        //"<a href='#' onclick='playVideo(\'' + response[i].filmName + '\');'>",
+                          "<img src='"+ response[i].imageUrl +"' alt='Avatar' style='width:100%; height=100%;'>",
+                        "</a>",
+
+                        "<div class='container' style='talign-content: center;'>",
+                          "<h6><b>"+ response[i].filmName +"</b></h6>",
+                        "</div>",
+                      "</div>",
+                      "</br>"
+                    ].join(""));
+
+                    resultStreamDIV.appendTo("#streamResultID");
+                  }
+
+                }
+
+                window.plugins.spinnerDialog.hide();
+                //Go to page 2
+                ////causes the browser to refresh and load the requested url
+                window.location.href = "#page2" ;
+
+            },
+            error: function (xhr, status) {
+                alert("error");
+                console.log("ERROR:"+status);
+            }
+          });
+        }
+
+        /**
+        * Clear Function
+        **/
+        function goToPage1(){
+          //reset the input text
+          $('#serchStringID').val('');
+          //Remove the previusly research
+          $("#streamResultID").empty();
+        }
+        </script>
+
+    </head>
+
+    <body>
+		<!-- page 1 -->
+		<div data-role="page" id="page1">
+			<div data-role="header">
+				<h1>Stream Pocket</h1>
+			</div>
+
+			<div class="ui-content_">
+				<div class="app">
+            <!--<form method="POST" class="mui-form" id="formId">-->
+            <form action="#" onsubmit="return validateFormOnSubmit(this);" class="mui-form" id="formId">
+                <legend> Start your Stream</legend>
+                <div class="mui-textfield">
+                    <input type="text" placeholder="Enter Film or TV Serie" id="serchStringID">
+                </div>
+
+                <button id='pageId' type="submit">Search Stream</button>
+
+            </form>
+
+
+        </div>
+			</div><!-- end page 1 content -->
+
+			<div data-role="footer" data-position="fixed">
+				<div data-role="navbar">
+					<ul>
+						<li><a href="#page1" class="ui-btn-active ui-state-persist">Home</a></li>
+						<li><a href="#page2">Last Search</a></li>
+					</ul>
+				</div><!-- /navbar -->
+			</div><!-- /footer -->
+		</div><!-- /page1 -->
+
+				<!-- page 2 -->
+		<div data-role="page" id="page2">
+			<div data-role="header">
+				<h1>Stram Pocket</h1>
+			</div>
+
+			<div class="ui-content">
+            <div id="streamResultID" style="width:60%; height:60%; margin-right:20%;">
+            </div>
+			</div><!-- end page 2 content -->
+
+			<div data-role="footer" data-position="fixed">
+				<div data-role="navbar">
+					<ul>
+						<li><a href="#page1" onClick="goToPage1();">Home</a></li>
+						<li><a href="#page2" class="ui-btn-active ui-state-persist">Last Search</a></li>
+					</ul>
+				</div><!-- /navbar -->
+			</div><!-- /footer -->
+		</div><!-- /page2 -->
+
+
+<script type="text/javascript" src="cordova.js"></script><script type="text/javascript" src="js/jquery-1.11.1.min.js" id="cordova-jquery"></script><script type="text/javascript" id="jqm-trans-disable">
+		/* For having a faster transition */
+		$(document).on("mobileinit", function() {
+				$.mobile.defaultPageTransition = "none";
+				$.mobile.defaultDialogTransition = "none";
+		});
+		</script><script type="text/javascript" src="js/jquery-1.5.0.mobile.min.js"></script><script type="text/javascript" src="js/index.js"></script></body>
+</html>

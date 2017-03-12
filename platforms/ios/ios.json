@@ -1,0 +1,95 @@
+{
+    "prepare_queue": {
+        "installed": [],
+        "uninstalled": []
+    },
+    "config_munge": {
+        "files": {
+            "config.xml": {
+                "parents": {
+                    "/*": [
+                        {
+                            "xml": "<feature name=\"SpinnerDialog\"><param name=\"ios-package\" value=\"CDVSpinnerDialog\" /></feature>",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"StatusBar\"><param name=\"ios-package\" value=\"CDVStatusBar\" /><param name=\"onload\" value=\"true\" /></feature>",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<preference name=\"StatusBarOverlaysWebView\" value=\"true\" />",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<preference name=\"StatusBarStyle\" value=\"lightcontent\" />",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"StreamingMedia\"><param name=\"ios-package\" value=\"StreamingMedia\" /></feature>",
+                            "count": 1
+                        }
+                    ]
+                }
+            }
+        }
+    },
+    "installed_plugins": {
+        "cordova-plugin-whitelist": {
+            "PACKAGE_NAME": "it.kasoale.streampocket"
+        },
+        "cordova-plugin-spinnerdialog": {
+            "PACKAGE_NAME": "it.kasoale.streampocket"
+        },
+        "cordova-plugin-tabrisjs-card": {
+            "PACKAGE_NAME": "it.kasoale.streampocket"
+        },
+        "cordova-plugin-statusbar": {
+            "PACKAGE_NAME": "it.kasoale.streampocket"
+        },
+        "com.hutchind.cordova.plugins.streamingmedia": {
+            "PACKAGE_NAME": "it.kasoale.streampocket"
+        }
+    },
+    "dependent_plugins": {},
+    "modules": [
+        {
+            "id": "cordova-plugin-spinnerdialog.SpinnerDialog",
+            "file": "plugins/cordova-plugin-spinnerdialog/www/spinner.js",
+            "pluginId": "cordova-plugin-spinnerdialog",
+            "merges": [
+                "window.plugins.spinnerDialog"
+            ]
+        },
+        {
+            "id": "cordova-plugin-tabrisjs-card.TabrisJSCards",
+            "file": "plugins/cordova-plugin-tabrisjs-card/www/tabrisjscard.js",
+            "pluginId": "cordova-plugin-tabrisjs-card",
+            "clobbers": [
+                "window.tabrisJsPlugins.cards"
+            ]
+        },
+        {
+            "id": "cordova-plugin-statusbar.statusbar",
+            "file": "plugins/cordova-plugin-statusbar/www/statusbar.js",
+            "pluginId": "cordova-plugin-statusbar",
+            "clobbers": [
+                "window.StatusBar"
+            ]
+        },
+        {
+            "id": "com.hutchind.cordova.plugins.streamingmedia.StreamingMedia",
+            "file": "plugins/com.hutchind.cordova.plugins.streamingmedia/www/StreamingMedia.js",
+            "pluginId": "com.hutchind.cordova.plugins.streamingmedia",
+            "clobbers": [
+                "streamingMedia"
+            ]
+        }
+    ],
+    "plugin_metadata": {
+        "cordova-plugin-whitelist": "1.3.1",
+        "cordova-plugin-spinnerdialog": "1.3.2",
+        "cordova-plugin-tabrisjs-card": "1.0.2",
+        "cordova-plugin-statusbar": "2.2.1",
+        "com.hutchind.cordova.plugins.streamingmedia": "0.1.4"
+    }
+}
